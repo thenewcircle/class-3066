@@ -15,6 +15,12 @@ public class StatusActivity extends Activity {
 	private static final int STATUS_WARN = 10;
 	private static final int STATUS_ERROR = 0;
 
+	public static void send(String status) {
+		try { Thread.sleep(10 * 1000); }
+		catch (InterruptedException e) {}
+	}
+	
+	
 	private EditText status;
 	private TextView count;
 
