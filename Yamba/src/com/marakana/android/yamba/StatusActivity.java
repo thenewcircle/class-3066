@@ -1,5 +1,8 @@
 package com.marakana.android.yamba;
 
+import com.marakana.android.yamba.clientlib.YambaClient;
+import com.marakana.android.yamba.clientlib.YambaClientException;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Color;
@@ -7,17 +10,28 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Button;
 
 public class StatusActivity extends Activity {
 	private static final int STATUS_MAX = 140;
 	private static final int STATUS_WARN = 10;
 	private static final int STATUS_ERROR = 0;
 
-	public static void send(String status) {
-		try { Thread.sleep(10 * 1000); }
-		catch (InterruptedException e) {}
+	public static boolean send(String status) {
+		YambaClient client = new YambaClient(
+				"student",
+				"password",
+				"http://yamba.marakana.com/api");
+		
+		
+		boolean succeeded = true;
+		try { client.postStatus(status); }
+		catch (YambaClientException e) { succeeded = false; }
+		
+		return succeeded;
 	}
 	
 	
@@ -29,6 +43,14 @@ public class StatusActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_status);
 
+		((Button) findViewById(R.id.submit)).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						
+					}
+				} );
+		
 		status = (EditText) findViewById(R.id.status);
 		count = (TextView) findViewById(R.id.count);
 		status.addTextChangedListener(
