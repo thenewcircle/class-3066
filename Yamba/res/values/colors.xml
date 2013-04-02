@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffffff</color>
+    <color name="dk_green">#ff009911</color>
+    <color name="lt_green">#ff00ff33</color>
+    <color name="black">#000000</color>
+</resources>
