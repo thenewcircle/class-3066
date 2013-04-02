@@ -7,5 +7,8 @@
     <string name="submit">Submit</string>
     <string name="count">140</string>
     <string name="enter_status">what\'s up?</string>
+    <string name="post_succeeded">Succeeded!</string>
+    <string name="post_failed">Post failed!</string>
+    
 
 </resources>
