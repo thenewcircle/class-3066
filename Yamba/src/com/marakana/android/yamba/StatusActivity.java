@@ -1,21 +1,21 @@
 package com.marakana.android.yamba;
 
-import com.marakana.android.yamba.clientlib.YambaClient;
-import com.marakana.android.yamba.clientlib.YambaClientException;
-
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
-import android.graphics.Color;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Button;
-import android.widget.Toast;
+
+import com.marakana.android.yamba.svc.YambaContract;
 
 public class StatusActivity extends Activity {
 	private static final String TAG = "STATUS";
@@ -24,44 +24,26 @@ public class StatusActivity extends Activity {
 	private static final int STATUS_WARN = 10;
 	private static final int STATUS_ERROR = 0;
 
-	public static boolean send(String status) {
-		YambaClient client = new YambaClient(
-				"student",
-				"password",
-				"http://yamba.marakana.com/api");
+	public static class Poster extends AsyncTask<String, Void, Void> {
+		private ContentResolver resolver;
 
-
-		boolean succeeded = true;
-		try { client.postStatus(status); }
-		catch (YambaClientException e) {
-			Log.e(TAG, "Post failed: " + e, e);
-			succeeded = false;
-		}
-
-		return succeeded;
-		
-	}
-
-	public class Poster extends AsyncTask<String, Void, Integer> {
+		public Poster(ContentResolver resolver) { this.resolver = resolver; }
 
 		@Override
-		protected Integer doInBackground(String... params) {
-			return Integer.valueOf(
-					(send(params[0]))
-					? R.string.post_succeeded
-					: R.string.post_failed);
-		}
-
-		protected void onPostExecute(Integer status) {
-			Toast.makeText(StatusActivity.this, status.intValue(), Toast.LENGTH_LONG).show();
+		protected Void doInBackground(String... params) {
+			ContentValues vals = new ContentValues();
+			vals.put(YambaContract.Posts.Columns.STATUS, params[0]);
+			resolver.insert(YambaContract.Posts.URI, vals);
 			poster = null;
+			return null;
 		}
 	}
 
+	volatile static private Poster poster;
 
+	
 	private EditText status;
 	private TextView count;
-	private Poster poster;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,11 +73,6 @@ public class StatusActivity extends Activity {
 				} );
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
 	void setCount() {
 		int n = STATUS_MAX - status.getText().length();
 		count.setText(String.valueOf(n));
@@ -105,9 +82,14 @@ public class StatusActivity extends Activity {
 
 	void postStatus() {
 		if (null != poster) { return; }
-		poster = new Poster();
+
 		String msg = status.getText().toString();
+
+		if (TextUtils.isEmpty(msg)) { return; }
+		
 		status.setText("");
+
+		poster = new Poster(getContentResolver());
 		poster.execute(msg);
 	}
 
@@ -117,5 +99,4 @@ public class StatusActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
 }
