@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">HelloWorld</string>
+     <!-- Status Activity -->
+    <string name="app_name">Yamba</string>
     <string name="action_settings">Settings</string>
+    
+     <!-- Status Activity -->
     <string name="status">Status</string>
     <string name="submit">Submit</string>
     <string name="count">140</string>
     <string name="enter_status">what\'s up?</string>
-    <string name="post_succeeded">Succeeded!</string>
-    <string name="post_failed">Post failed!</string>
-    
+
+    <!-- Timeline Activity -->
+    <string name="title_activity_timeline">Timeline</string>
 
 </resources>
