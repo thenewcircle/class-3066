@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-     <!-- Status Activity -->
+    <!-- Status Activity -->
     <string name="app_name">Yamba</string>
     <string name="action_settings">Settings</string>
-    
-     <!-- Status Activity -->
+    <string name="action_status">Status</string>
+    <string name="action_timeline">Timeline</string>
+
+    <!-- Status Activity -->
     <string name="status">Status</string>
     <string name="submit">Submit</string>
     <string name="count">140</string>
