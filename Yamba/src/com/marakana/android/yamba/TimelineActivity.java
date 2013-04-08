@@ -1,24 +1,23 @@
 package com.marakana.android.yamba;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.MenuItem;
 
 import com.marakana.android.yamba.svc.YambaServiceHelper;
 
 
-public class TimelineActivity extends Activity {
+public class TimelineActivity extends BaseActivity {
 	private YambaServiceHelper yambaSvc;
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.timeline, menu);
-		return true;
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (R.id.action_status == item.getItemId()) { return true; }
+		return super.onOptionsItemSelected(item);
 	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.timeline);
+		setContentView(R.layout.activity_timeline);
 
 		yambaSvc = YambaServiceHelper.getInstance();
 
