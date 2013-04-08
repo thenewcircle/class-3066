@@ -15,4 +15,8 @@
     <!-- Timeline Activity -->
     <string name="title_activity_timeline">Timeline</string>
 
+
+    <!-- Timeline Detail -->
+    <string name="empty">Nothing to say, yet!</string>
+    
 </resources>
