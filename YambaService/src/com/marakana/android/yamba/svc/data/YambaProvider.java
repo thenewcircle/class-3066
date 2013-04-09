@@ -230,8 +230,19 @@ public class YambaProvider extends ContentProvider {
         SQLiteDatabase db = getDb();
         int count = 0;
 
-        //!! Implement me
-        
+        try {
+        	db.beginTransaction();
+        	
+        	for (ContentValues val: vals) {
+        		if (0 < db.insert(table, null, val)) { count++; }
+        	}
+        	
+        	db.setTransactionSuccessful();
+        }
+        finally {
+        	db.endTransaction();
+        }
+
         return count;
     }
 
