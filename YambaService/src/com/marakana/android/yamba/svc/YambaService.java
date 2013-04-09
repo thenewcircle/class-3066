@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +15,8 @@ import com.marakana.android.yamba.clientlib.YambaClientException;
 
 
 public class YambaService extends IntentService {
-    private static final String TAG = "SVC";
-
+    private static final String TAG = "SVC";    
+    
     public static enum Op {
         NOOP(9000),
         POLL(-9001),
@@ -53,7 +54,7 @@ public class YambaService extends IntentService {
 
         switch (Op.fromCode(op)) {
 
-        	//!! Implement me!
+            //!! Implement me!
         
             default:
                 throw new IllegalArgumentException("Unrecognized op: " + op);

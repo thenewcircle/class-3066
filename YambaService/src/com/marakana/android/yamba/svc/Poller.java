@@ -31,15 +31,30 @@ public class Poller {
     }
 
 	public static void startPolling(Context ctxt) {
+		AlarmManager mgr = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
+		mgr.setRepeating(
+				AlarmManager.RTC,
+				System.currentTimeMillis() + POLL_INTERVAL,
+				POLL_INTERVAL,
+				PendingIntent.getService(
+						ctxt,
+						INTENT_TAG,
+						getPollIntent(ctxt),
+						PendingIntent.FLAG_UPDATE_CURRENT));
 		
-		//!!! Implement me
 		
         if (BuildConfig.DEBUG) { Log.d(TAG, "Polling started"); }
 	}
 
     public static void stopPolling(Context ctxt) {
 
-    	//!!! Implement me
+		AlarmManager mgr = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
+		mgr.cancel(
+				PendingIntent.getService(
+						ctxt,
+						INTENT_TAG,
+						getPollIntent(ctxt),
+						PendingIntent.FLAG_UPDATE_CURRENT));
 
     	if (BuildConfig.DEBUG) { Log.d(TAG, "Polling stopped"); }
     }
@@ -70,6 +85,7 @@ public class Poller {
         long mostRecentStatus = getLatestStatusCreatedAtTime();
         List<ContentValues> update = new ArrayList<ContentValues>(statuses.size());
 
+        // !! implement me...
         
         int added = 0;
         if (0 < update.size()) {

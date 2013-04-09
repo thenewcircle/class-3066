@@ -140,16 +140,16 @@ public class YambaProvider extends ContentProvider {
         long pk = -1;
 
         if (BuildConfig.DEBUG) { Log.d(TAG, "query: " + uri); }
-    	switch (uriMatcher.match(uri)) {
-	    	case TIMELINE_ITEM:
-	    		pk = ContentUris.parseId(uri);
+        switch (uriMatcher.match(uri)) {
+            case TIMELINE_ITEM:
+                pk = ContentUris.parseId(uri);
 
-	    	case TIMELINE_DIR:
+            case TIMELINE_DIR:
                 table = YambaHelper.TABLE_TIMELINE;
                 pm = PROJ_MAP_TIMELINE;
-	    		break;
+                break;
 
-	    	case POST_ITEM:
+            case POST_ITEM:
                 pk = ContentUris.parseId(uri);
 
             case POST_DIR:
@@ -162,15 +162,24 @@ public class YambaProvider extends ContentProvider {
                 pm = PROJ_MAP_SERVICE;
                 break;
 
-	    	default:
-	    		throw new IllegalArgumentException("URI unsupported in query: " + uri);
-    	}
+            default:
+                throw new IllegalArgumentException("URI unsupported in query: " + uri);
+        }
 
-    	SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            qb.setStrict(true);
+        }
 
-    	// !! Implement me!
-    	
+        qb.setProjectionMap(pm.getProjectionMap());
+        
+        qb.setTables(table);
+        
+        if (0 <= pk) { qb.appendWhere(YambaHelper.COL_ID + "=" + pk); } 
+        
         Cursor c = qb.query(getDb(), proj, sel, selArgs, null, null, sort);
+        
+        c.setNotificationUri(getContext().getContentResolver(), uri);
 
         return c;
     }
@@ -257,7 +266,7 @@ public class YambaProvider extends ContentProvider {
     }
 
     private void postRemote(ContentValues vals) {
-    	// !! Implement me
+        // !! Implement me
     }
 
     private SQLiteDatabase getDb() { return dbHelper.getWritableDatabase(); }
