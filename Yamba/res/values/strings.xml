@@ -17,6 +17,7 @@
 
 
     <!-- Timeline Detail -->
+    <string name="details">Detail</string>
     <string name="empty">Nothing to say, yet!</string>
     
 </resources>

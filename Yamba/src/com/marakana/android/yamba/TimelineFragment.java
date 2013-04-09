@@ -105,7 +105,7 @@ public class TimelineFragment extends ListFragment implements LoaderCallbacks<Cu
 		Cursor c = (Cursor) getListAdapter().getItem(pos);
 		int idx = c.getColumnIndex(YambaContract.Timeline.Columns.STATUS);
 		
-		Intent intent = new Intent(getActivity(), TimelineDetail.class);
+		Intent intent = new Intent(getActivity(), TimelineDetailActivity.class);
 		intent.putExtra(TimelineDetailFragment.ARG_MESSAGE, c.getString(idx));
 		startActivity(intent);
 	}

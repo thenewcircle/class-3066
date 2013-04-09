@@ -1,7 +1,10 @@
 package com.marakana.android.yamba;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -33,4 +36,15 @@ public class BaseActivity extends Activity {
 	
 		return super.onOptionsItemSelected(item);
 	}
+
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	@Override
+	protected void onCreate(Bundle b) {
+		super.onCreate(b);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            getActionBar().setHomeButtonEnabled(true);
+        }
+	}
+	
+	
 }
