@@ -85,7 +85,7 @@ public class Poller {
         long mostRecentStatus = getLatestStatusCreatedAtTime();
         List<ContentValues> update = new ArrayList<ContentValues>(statuses.size());
 
-        // !! implement me...
+        // Loop converting statuses to update
         
         int added = 0;
         if (0 < update.size()) {

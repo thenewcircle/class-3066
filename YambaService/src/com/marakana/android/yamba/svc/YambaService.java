@@ -54,7 +54,17 @@ public class YambaService extends IntentService {
 
         switch (Op.fromCode(op)) {
 
-            //!! Implement me!
+        case START_POLL:
+        	Poller.startPolling(this);
+        	break;
+
+        case STOP_POLL:
+        	Poller.stopPolling(this);
+        	break;
+        	
+        case POLL:
+        	new Poller((YambaApplication) this.getApplication()).pollStatus();
+        	break;
         
             default:
                 throw new IllegalArgumentException("Unrecognized op: " + op);
