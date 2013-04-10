@@ -31,32 +31,28 @@ public class Poller {
     }
 
 	public static void startPolling(Context ctxt) {
-		AlarmManager mgr = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
-		mgr.setRepeating(
-				AlarmManager.RTC,
-				System.currentTimeMillis() + POLL_INTERVAL,
-				POLL_INTERVAL,
-				PendingIntent.getService(
-						ctxt,
-						INTENT_TAG,
-						getPollIntent(ctxt),
-						PendingIntent.FLAG_UPDATE_CURRENT));
-		
-		
+		((AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE))
+            .setRepeating(
+                AlarmManager.RTC,
+                System.currentTimeMillis() + 100,
+                POLL_INTERVAL,
+                PendingIntent.getService(
+                    ctxt,
+                    INTENT_TAG,
+                    getPollIntent(ctxt),
+                    PendingIntent.FLAG_UPDATE_CURRENT));
         if (BuildConfig.DEBUG) { Log.d(TAG, "Polling started"); }
 	}
 
     public static void stopPolling(Context ctxt) {
-
-		AlarmManager mgr = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
-		mgr.cancel(
-				PendingIntent.getService(
-						ctxt,
-						INTENT_TAG,
-						getPollIntent(ctxt),
-						PendingIntent.FLAG_UPDATE_CURRENT));
-
-    	if (BuildConfig.DEBUG) { Log.d(TAG, "Polling stopped"); }
+        ((AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE))
+        .cancel(
+            PendingIntent.getService(
+                    ctxt,
+                    INTENT_TAG,
+                    getPollIntent(ctxt),
+                    PendingIntent.FLAG_UPDATE_CURRENT));
+        if (BuildConfig.DEBUG) { Log.d(TAG, "Polling stopped"); }
     }
 
 
@@ -84,9 +80,18 @@ public class Poller {
     private int addAll(List<YambaClient.Status> statuses) {
         long mostRecentStatus = getLatestStatusCreatedAtTime();
         List<ContentValues> update = new ArrayList<ContentValues>(statuses.size());
+        for (YambaClient.Status status: statuses) {
+            long t = status.getCreatedAt().getTime();
+            if (mostRecentStatus <= t) {
+                ContentValues vals = new ContentValues();
+                vals.put(ServiceContract.Columns.ID, Long.valueOf(status.getId()));
+                vals.put(ServiceContract.Columns.TIMESTAMP, Long.valueOf(t));
+                vals.put(ServiceContract.Columns.USER, status.getUser());
+                vals.put(ServiceContract.Columns.STATUS, status.getMessage());
+                update.add(vals);
+            }
+        }
 
-        // Loop converting statuses to update
-        
         int added = 0;
         if (0 < update.size()) {
             added = ctxt.getContentResolver().bulkInsert(

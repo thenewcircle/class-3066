@@ -20,7 +20,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application
+    <application 
         android:name=".YambaApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_yamba"

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,8 +14,8 @@ import com.marakana.android.yamba.clientlib.YambaClientException;
 
 
 public class YambaService extends IntentService {
-    private static final String TAG = "SVC";    
-    
+    private static final String TAG = "SVC";
+
     public static enum Op {
         NOOP(9000),
         POLL(-9001),
@@ -41,6 +40,24 @@ public class YambaService extends IntentService {
         int getCode() { return code; }
     }
 
+    public static class SafeYambaClient {
+        public static final int MAX_POSTS = 40;
+
+        private final YambaClient rawClient;
+
+        public SafeYambaClient(String usr, String pwd, String endpoint) {
+            rawClient = new YambaClient(usr, pwd, endpoint);
+        }
+
+        public synchronized List<YambaClient.Status> getTimeline() throws YambaClientException {
+            return rawClient.getTimeline(MAX_POSTS);
+       }
+
+        public synchronized void postStatus(String statusText) throws YambaClientException {
+            rawClient.postStatus(statusText);
+       }
+    }
+
     public static String getTransactionId() { return UUID.randomUUID().toString(); }
 
 
@@ -53,19 +70,22 @@ public class YambaService extends IntentService {
         if (BuildConfig.DEBUG) { Log.d(TAG, "handle op: " + op); }
 
         switch (Op.fromCode(op)) {
+            case START_POLL:
+                Poller.startPolling(getApplicationContext());
+                break;
 
-        case START_POLL:
-        	Poller.startPolling(this);
-        	break;
+            case STOP_POLL:
+                Poller.stopPolling(getApplicationContext());
+                break;
 
-        case STOP_POLL:
-        	Poller.stopPolling(this);
-        	break;
-        	
-        case POLL:
-        	new Poller((YambaApplication) this.getApplication()).pollStatus();
-        	break;
-        
+            case POST:
+                new Poster((YambaApplication) getApplication()).postStatus(args);
+                break;
+
+            case POLL:
+                new Poller((YambaApplication) getApplication()).pollStatus();
+                break;
+
             default:
                 throw new IllegalArgumentException("Unrecognized op: " + op);
         }

@@ -1,9 +1,11 @@
 package com.marakana.android.yamba.svc;
 
+
 import java.util.List;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -56,9 +58,10 @@ public class YambaApplication
         super.onCreate();
         if (BuildConfig.DEBUG) { Log.d(TAG, "Application up!"); }
 
-        keyUser = getString(R.string.prefs_key_user);
-        keyPasswd = getString(R.string.prefs_key_pwd);
-        keyEndpoint = getString(R.string.prefs_key_endpoint);
+        Resources rez = getResources();
+        keyUser = rez.getString(R.string.prefs_key_user);
+        keyPasswd = rez.getString(R.string.prefs_key_pwd);
+        keyEndpoint = rez.getString(R.string.prefs_key_endpoint);
 
         PreferenceManager.getDefaultSharedPreferences(this)
             .registerOnSharedPreferenceChangeListener(this);

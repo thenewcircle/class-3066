@@ -17,20 +17,24 @@ public class Poster {
     private static final String XACT = "Poster.XACT";
     private static final String STATUS = "Poster.STATUS";
 
-    public static void postStatus(Context ctxt, String xact, String status) {
-        //!! Implement me
-    }
-
 
     private final YambaApplication ctxt;
-    
+
+    public static void postStatus(Context ctxt, String xact, String status) {
+        Intent intent = new Intent(ctxt, YambaService.class);
+        intent.putExtra(YambaContract.SVC_PARAM_OP, Op.POST.getCode());
+        intent.putExtra(XACT, xact);
+        intent.putExtra(STATUS, status);
+        ctxt.startService(intent);
+    }
+
     Poster(YambaApplication ctxt) { this.ctxt = ctxt; }
 
     void postStatus(Bundle args) {
         ContentValues vals = new ContentValues();
         try {
-            ctxt.getClient().postStatus("foo");
-            //!! Implement me
+            ctxt.getClient().postStatus(args.getString(STATUS));
+            vals.put(ServiceContract.Columns.TIMESTAMP, Long.valueOf(System.currentTimeMillis()));
         }
         catch (YambaClientException e) {
             Log.w(TAG, "post failed: ", e);

@@ -26,7 +26,6 @@ class YambaHelper extends SQLiteOpenHelper {
     public static final String COL_USER = "user";
     public static final String COL_STATUS = "status";
 
-    
     public YambaHelper(Context context) {
         super(context, DATABASE, null, VERSION);
     }

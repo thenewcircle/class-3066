@@ -11,72 +11,72 @@ import com.marakana.android.yamba.svc.YambaServiceHelper;
 
 
 public class TimelineActivity extends BaseActivity {
-	private static final String DETAIL_FRAG = "DETAILS";
+    private static final String DETAIL_FRAG = "DETAILS";
 
-	
-	private YambaServiceHelper yambaSvc;
-	private boolean usingFragments;
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (R.id.action_status == item.getItemId()) { return true; }
-		return super.onOptionsItemSelected(item);
-	}
+    private YambaServiceHelper yambaSvc;
+    private boolean usingFragments;
 
-	@Override
-	public void startActivityFromFragment(Fragment fragment, Intent intent, int requestCode) {
-		if (!usingFragments) { startActivity(intent); }
-		else {
-			replaceFragment(intent.getStringExtra(TimelineDetailFragment.ARG_MESSAGE));
-		}
-	}
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (R.id.action_status == item.getItemId()) { return true; }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_timeline);
+    @Override
+    public void startActivityFromFragment(Fragment fragment, Intent intent, int requestCode) {
+        if (!usingFragments) { startActivity(intent); }
+        else {
+            replaceFragment(intent.getStringExtra(TimelineDetailFragment.ARG_MESSAGE));
+        }
+    }
 
-		yambaSvc = YambaServiceHelper.getInstance();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_timeline);
 
-		usingFragments = null != findViewById(R.id.fragment_timeline_detail);
+        yambaSvc = YambaServiceHelper.getInstance();
 
-		if (usingFragments) { installDetailsFragment(); }
-	}
+        usingFragments = null != findViewById(R.id.fragment_timeline_detail);
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		yambaSvc.stopPolling(this);
-	}
+        if (usingFragments) { installDetailsFragment(); }
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		yambaSvc.startPolling(this);
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        yambaSvc.stopPolling(this);
+    }
 
-	private void installDetailsFragment() {
-		FragmentManager fragMgr = getFragmentManager();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        yambaSvc.startPolling(this);
+    }
 
-		if ( null != fragMgr.findFragmentByTag(DETAIL_FRAG)) { return; }
-		
-		FragmentTransaction xact = fragMgr.beginTransaction();
-		xact.add(
-				R.id.fragment_timeline_detail,
-				TimelineDetailFragment.newInstance(getString(R.string.empty)),
-				DETAIL_FRAG);
-		xact.commit();
-	}
+    private void installDetailsFragment() {
+        FragmentManager fragMgr = getFragmentManager();
 
-	public void replaceFragment(String message) {
-		FragmentManager fragMgr = getFragmentManager();
+        if ( null != fragMgr.findFragmentByTag(DETAIL_FRAG)) { return; }
 
-		FragmentTransaction xact = fragMgr.beginTransaction();
-		xact.replace(
-				R.id.fragment_timeline_detail,
-				TimelineDetailFragment.newInstance(message),
-				DETAIL_FRAG);
-		xact.addToBackStack(null);
-		xact.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-		xact.commit();
-	}
+        FragmentTransaction xact = fragMgr.beginTransaction();
+        xact.add(
+                R.id.fragment_timeline_detail,
+                TimelineDetailFragment.newInstance(getString(R.string.empty)),
+                DETAIL_FRAG);
+        xact.commit();
+    }
+
+    public void replaceFragment(String message) {
+        FragmentManager fragMgr = getFragmentManager();
+
+        FragmentTransaction xact = fragMgr.beginTransaction();
+        xact.replace(
+                R.id.fragment_timeline_detail,
+                TimelineDetailFragment.newInstance(message),
+                DETAIL_FRAG);
+        xact.addToBackStack(null);
+        xact.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        xact.commit();
+    }
 }
